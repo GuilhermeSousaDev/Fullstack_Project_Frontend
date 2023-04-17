@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -62,8 +62,17 @@ export default function DragFileModal({ form, setForm, handleClose }: IProps) {
   const [msg, setMsg] = useState("Drag Files Here...");
   const [isDisabled, setIsDisabled] = useState(false);
   const [snackbar, setSnackbar] = useState<ISnackbar>(initialSnackbarState);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const { getRootProps } = useDropzone({
+  useEffect(() => {
+    if (screen.width < 640 || screen.height < 480) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+  }, [screen.width, screen.height]);
+
+  const { getRootProps, getInputProps } = useDropzone({
     onDragEnter: () => {
       setColor(theme.palette.success.light);
       setMsg("Drop Files Here...");
@@ -154,7 +163,7 @@ export default function DragFileModal({ form, setForm, handleClose }: IProps) {
         {file?.preview ? (
           <>
             <CardMedia
-              {...getRootProps()}
+              {...getInputProps()}
               sx={{ height: 130 }}
               image={file.preview}
             />
@@ -173,10 +182,10 @@ export default function DragFileModal({ form, setForm, handleClose }: IProps) {
               borderTopRightRadius: 5,
               background: color,
             }}
-            {...getRootProps()}
           >
             <UploadIcon />
             <Typography>{msg}</Typography>
+            { isMobile ? <input type="file" onChange={({ target }) => target.files && setFile(Object.assign(target.files[0], { preview: URL.createObjectURL(target.files[0]) }))} /> : '' }
           </Box>
         )}
         <CardContent>
