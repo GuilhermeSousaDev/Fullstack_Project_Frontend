@@ -72,7 +72,7 @@ export default function DragFileModal({ form, setForm, handleClose }: IProps) {
     }
   }, [screen.width, screen.height]);
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps } = useDropzone({
     onDragEnter: () => {
       setColor(theme.palette.success.light);
       setMsg("Drop Files Here...");
@@ -163,8 +163,8 @@ export default function DragFileModal({ form, setForm, handleClose }: IProps) {
         {file?.preview ? (
           <>
             <CardMedia
-              {...getInputProps()}
-              sx={{ height: 130 }}
+              {...getRootProps()}
+              sx={{ height: 130, cursor: 'pointer' }}
               image={file.preview}
             />
           </>
@@ -181,7 +181,9 @@ export default function DragFileModal({ form, setForm, handleClose }: IProps) {
               borderTopLeftRadius: 5,
               borderTopRightRadius: 5,
               background: color,
+              cursor: 'pointer',
             }}
+            { ...getRootProps() }
           >
             <UploadIcon />
             <Typography>{msg}</Typography>
